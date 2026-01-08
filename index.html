@@ -1,0 +1,2620 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Pendaftaran Kegiatan UKM</title>
+    <style>
+    /* =================================================
+   RESET & GLOBAL
+================================================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: radial-gradient(circle at top, #1f2b45, #0b1220 65%);
+  color: #e5e7eb;
+}
+
+/* =================================================
+   LOGIN & REGISTER
+================================================= */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(18,28,46,0.9);
+  backdrop-filter: blur(18px);
+  border-radius: 22px;
+  padding: 42px 36px;
+  box-shadow: 0 40px 80px rgba(0,0,0,.6);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.login-header .logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  background: linear-gradient(135deg,#facc15,#fde047);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  margin: 0 auto 14px;
+  color: #111;
+}
+
+.login-header h1 {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.login-header p {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: none;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(15,23,42,.9);
+  color: #e5e7eb;
+}
+
+.form-group input::placeholder {
+  color: #6b7280;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #a855f7;
+  box-shadow: 0 0 0 3px rgba(168,85,247,.25);
+}
+
+.btn-login {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(90deg,#ec4899,#a855f7);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.register-link {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.register-link a {
+  color: #facc15;
+  text-decoration: none;
+}
+
+/* =================================================
+   DASHBOARD LAYOUT
+================================================= */
+.dashboard {
+  display: none;
+  min-height: 100vh;
+}
+
+.dashboard.active {
+  display: flex;
+}
+
+/* =================================================
+   SIDEBAR
+================================================= */
+.sidebar {
+  width: 260px;
+  background: rgba(15,23,42,.95);
+  backdrop-filter: blur(16px);
+  padding: 22px;
+  transition: .3s;
+}
+
+.sidebar.collapsed {
+  width: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.sidebar-header h2 {
+  font-size: 18px;
+  margin-bottom: 26px;
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.menu-item {
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  color: #9ca3af;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background: rgba(168,85,247,.15);
+  color: white;
+}
+
+.menu-item.active {
+  background: linear-gradient(90deg,#ec4899,#a855f7);
+  color: white;
+  font-weight: 600;
+}
+
+/* =================================================
+   MAIN & HEADER
+================================================= */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  height: 72px;
+  background: rgba(15,23,42,.75);
+  backdrop-filter: blur(14px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 26px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: white;
+  cursor: pointer;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-info .name {
+  font-weight: 600;
+}
+
+.user-info .role {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.btn-logout {
+  background: #ef4444;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+}
+
+/* =================================================
+   CONTENT & CARD
+================================================= */
+.content {
+  padding: 26px;
+}
+
+.card {
+  background: rgba(18,28,46,.9);
+  border-radius: 18px;
+  padding: 22px;
+  margin-bottom: 22px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.4);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.card-header h3 {
+  font-size: 16px;
+}
+
+/* =================================================
+   STATS
+================================================= */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.stat-card {
+  padding: 20px;
+  border-radius: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+.stat-card.blue { background: linear-gradient(135deg,#3b82f6,#2563eb); }
+.stat-card.green { background: linear-gradient(135deg,#22c55e,#16a34a); }
+.stat-card.yellow { background: linear-gradient(135deg,#facc15,#eab308); color:#111; }
+.stat-card.purple { background: linear-gradient(135deg,#a855f7,#7c3aed); }
+
+/* =================================================
+   ACTIVITY & TABLE
+================================================= */
+.activity-item {
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+
+.activity-title {
+  font-weight: 600;
+}
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.badge.success { background:#22c55e; color:white; }
+.badge.warning { background:#facc15; color:#111; }
+.badge.danger { background:#ef4444; color:white; }
+.badge.info { background:#3b82f6; color:white; }
+
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+/* =================================================
+   MODAL & TOAST
+================================================= */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background: #0f172a;
+  padding: 26px;
+  border-radius: 18px;
+  max-width: 500px;
+  width: 90%;
+}
+
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #111827;
+  color: white;
+  padding: 14px 18px;
+  border-radius: 12px;
+  display: none;
+}
+
+/* =================================================
+   RESPONSIVE
+================================================= */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    height: 100vh;
+    z-index: 1000;
+  }
+
+  .content {
+    padding: 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================
+   ACTIVITY ITEM DETAIL (FIX MISSING STYLES)
+========================================= */
+.activity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.activity-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.activity-ukm {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.activity-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 12px;
+  color: #cbd5f5;
+  margin-top: 8px;
+}
+
+/* =========================================
+   REGISTER BUTTON
+========================================= */
+.btn-register {
+  margin-top: 14px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  color: white;
+  transition: .25s;
+}
+
+.btn-register:hover {
+  opacity: .9;
+  transform: translateY(-1px);
+}
+
+/* =========================================
+   ACTION BUTTONS (ADMIN)
+========================================= */
+.action-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-icon {
+  border: none;
+  border-radius: 10px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: white;
+}
+
+.btn-edit {
+  background: #3b82f6;
+}
+
+.btn-delete {
+  background: #ef4444;
+}
+
+.btn-approve {
+  background: #22c55e;
+}
+
+.btn-reject {
+  background: #f59e0b;
+}
+
+/* =========================================
+   MODAL BUTTONS
+========================================= */
+.modal-btn {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.modal-btn-primary {
+  background: linear-gradient(90deg,#ec4899,#a855f7);
+  color: white;
+}
+
+.modal-btn-secondary {
+  background: #334155;
+  color: white;
+}
+
+.modal-btn-danger {
+  background: #ef4444;
+  color: white;
+}
+
+.modal-btn-success {
+  background: #22c55e;
+  color: white;
+}
+
+/* =========================================
+   MODAL FORM
+========================================= */
+.modal-form textarea {
+  width: 100%;
+  min-height: 90px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(15,23,42,.9);
+  color: #e5e7eb;
+  resize: vertical;
+}
+
+/* =========================================
+   TEXT NORMALIZATION
+========================================= */
+.card p,
+.activity-item p {
+  font-size: 13px;
+  color: #cbd5f5;
+  line-height: 1.6;
+}
+
+.card h4 {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* =========================================
+   SEARCH BOX FIX
+========================================= */
+.search-box {
+  margin-bottom: 12px;
+}
+
+/* =========================================
+   RESPONSIVE FIX
+========================================= */
+@media (max-width: 600px) {
+  .activity-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .action-btns {
+    align-self: flex-end;
+  }
+}
+
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <div class="logo">🏛️</div>
+                <h1>Sistem UKM</h1>
+                <p>Pendaftaran Kegiatan Mahasiswa</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Pilih Role</label>
+                    <select id="roleSelect">
+                        <option value="mahasiswa">Mahasiswa</option>
+                        <option value="admin_ukm">Admin UKM</option>
+                        <option value="admin_kampus">Admin Kampus</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="username" placeholder="Masukkan username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="Masukkan password" required>
+                </div>
+                <button type="submit" class="btn-login">Login</button>
+                <div class="register-link">
+                    <p>Belum punya akun? <a href="#" onclick="showRegisterPage()">Daftar sebagai Mahasiswa</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Page -->
+    <div id="registerPage" class="login-container" style="display: none;">
+        <div class="login-box">
+            <div class="login-header">
+                <div class="logo">📝</div>
+                <h1>Registrasi Akun</h1>
+                <p>Mahasiswa Baru</p>
+            </div>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="regNama" placeholder="Masukkan nama lengkap" required>
+                </div>
+                <div class="form-group">
+                    <label>NIM</label>
+                    <input type="text" id="regNIM" placeholder="Masukkan NIM" required>
+                </div>
+                <div class="form-group">
+                    <label>Program Studi</label>
+                    <input type="text" id="regProdi" placeholder="Masukkan program studi" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="regEmail" placeholder="Masukkan email" required>
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="regUsername" placeholder="Buat username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="regPassword" placeholder="Buat password" required>
+                </div>
+                <div class="form-group">
+                    <label>Konfirmasi Password</label>
+                    <input type="password" id="regConfirmPassword" placeholder="Ulangi password" required>
+                </div>
+                <button type="submit" class="btn-login">Daftar Akun</button>
+                <div class="register-link">
+                    <p>Sudah punya akun? <a href="#" onclick="showLoginPage()">Login</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Mahasiswa -->
+    <div id="dashboardMahasiswa" class="dashboard">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>📚 Sistem UKM</h2>
+            </div>
+            <div class="sidebar-menu">
+                <div class="menu-item active" onclick="showDashboardMahasiswa()">📊 Dashboard</div>
+                <div class="menu-item" onclick="showDaftarUKM()">📋 Daftar UKM</div>
+                <div class="menu-item" onclick="showKegiatanTersedia()">🎯 Kegiatan Tersedia</div>
+                <div class="menu-item" onclick="showPendaftaranSaya()">✅ Pendaftaran Saya</div>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <div class="header-left">
+                    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+                    <h2>Dashboard Mahasiswa</h2>
+                </div>
+                <div class="header-right">
+                    <div class="user-info">
+                        <div class="name" id="mahasiswaName">Budi Santoso</div>
+                        <div class="role">Mahasiswa</div>
+                    </div>
+                    <button class="btn-logout" onclick="logout()">🚪 Logout</button>
+                </div>
+            </div>
+            <div class="content">
+                <!-- Dashboard Default View -->
+                <div id="mahasiswaDashboardView">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Kegiatan UKM Tersedia</h3>
+                        </div>
+                        <div class="search-box">
+                            <input type="text" placeholder="Cari kegiatan..." id="searchKegiatan">
+                        </div>
+                        <div id="kegiatanList"></div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Pendaftaran Saya</h3>
+                        </div>
+                        <div id="pendaftaranList"></div>
+                    </div>
+                </div>
+
+                <!-- Daftar UKM View -->
+                <div id="daftarUKMView" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Daftar UKM Kampus</h3>
+                            <div class="search-box">
+                                <input type="text" placeholder="Cari UKM..." id="searchUKM">
+                            </div>
+                        </div>
+                        <div id="ukmList"></div>
+                    </div>
+                </div>
+
+                <!-- Kegiatan Tersedia View -->
+                <div id="kegiatanTersediaView" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Kegiatan UKM Tersedia</h3>
+                            <div class="search-box">
+                                <input type="text" placeholder="Cari kegiatan..." id="searchKegiatanDetail">
+                            </div>
+                        </div>
+                        <div id="kegiatanDetailList"></div>
+                    </div>
+                </div>
+
+                <!-- Pendaftaran Saya View -->
+                <div id="pendaftaranSayaView" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Status Pendaftaran Saya</h3>
+                        </div>
+                        <div id="statusPendaftaranList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Admin UKM -->
+    <div id="dashboardAdminUKM" class="dashboard">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>📚 Sistem UKM</h2>
+            </div>
+            <div class="sidebar-menu">
+                <div class="menu-item active" onclick="showDashboardAdminUKM()">📊 Dashboard</div>
+                <div class="menu-item" onclick="showKelolaKegiatan()">📋 Kelola Kegiatan</div>
+                <div class="menu-item" onclick="showPendaftarAdmin()">👥 Pendaftar</div>
+                <div class="menu-item" onclick="showDaftarUKMAdmin()">🏢 Daftar UKM</div>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <div class="header-left">
+                    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+                    <h2>Dashboard Admin UKM</h2>
+                </div>
+                <div class="header-right">
+                    <div class="notification-bell" onclick="showNotifications()">
+                        🔔
+                        <span id="notificationCount" class="notification-count">0</span>
+                    </div>
+                    <div class="user-info">
+                        <div class="name">Admin UKM IT</div>
+                        <div class="role">Admin UKM</div>
+                    </div>
+                    <button class="btn-logout" onclick="logout()">🚪 Logout</button>
+                </div>
+            </div>
+            <div class="content">
+                <!-- Dashboard View -->
+                <div id="adminUKMDashboardView">
+                    <div class="stats-grid">
+                        <div class="stat-card blue">
+                            <div class="stat-info">
+                                <h3>Total Kegiatan</h3>
+                                <div class="number">8</div>
+                            </div>
+                            <div class="stat-icon">📅</div>
+                        </div>
+                        <div class="stat-card green">
+                            <div class="stat-info">
+                                <h3>Peserta Terdaftar</h3>
+                                <div class="number">98</div>
+                            </div>
+                            <div class="stat-icon">👥</div>
+                        </div>
+                        <div class="stat-card yellow">
+                            <div class="stat-info">
+                                <h3>Menunggu Approve</h3>
+                                <div class="number">12</div>
+                            </div>
+                            <div class="stat-icon">⏰</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Kelola Kegiatan</h3>
+                            <button class="btn-primary" onclick="tambahKegiatan()">➕ Tambah Kegiatan</button>
+                        </div>
+                        <div id="adminKegiatanList"></div>
+                    </div>
+                </div>
+
+                <!-- Kelola Kegiatan View -->
+                <div id="kelolaKegiatanView" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Kelola Kegiatan UKM</h3>
+                            <button class="btn-primary" onclick="tambahKegiatan()">➕ Tambah Kegiatan</button>
+                        </div>
+                        <div class="search-box">
+                            <input type="text" placeholder="Cari kegiatan..." id="searchKegiatanAdmin">
+                        </div>
+                        <div id="kelolaKegiatanList"></div>
+                    </div>
+                </div>
+
+                <!-- Pendaftar View -->
+                <div id="pendaftarAdminView" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Pendaftar Kegiatan</h3>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Nama</th>
+                                        <th>NIM</th>
+                                        <th>Kegiatan</th>
+                                        <th>Tanggal Daftar</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pendaftarTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daftar UKM Admin View -->
+                <div id="daftarUKMAdminView" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Daftar UKM yang Dikelola</h3>
+                        </div>
+                        <div id="ukmAdminList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Dashboard Admin Kampus -->
+    <div id="dashboardAdminKampus" class="dashboard">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>📚 Sistem UKM</h2>
+            </div>
+            <div class="sidebar-menu">
+                <div class="menu-item active" onclick="showDashboardAdminKampus()">📊 Dashboard</div>
+                <div class="menu-item" onclick="showApprovalKegiatan()">✅ Approval Kegiatan</div>
+                <div class="menu-item" onclick="showLaporan()">📈 Laporan</div>
+                <div class="menu-item" onclick="showKelolaUKM()">🏢 Kelola UKM</div>
+                <div class="menu-item" onclick="showFilterData()">🔍 Filter Data</div>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <div class="header-left">
+                    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+                    <h2>Dashboard Admin Kampus</h2>
+                </div>
+                <div class="header-right">
+                    <div class="user-info">
+                        <div class="name">Admin Kampus</div>
+                        <div class="role">Admin Kampus</div>
+                    </div>
+                    <button class="btn-logout" onclick="logout()">🚪 Logout</button>
+                </div>
+            </div>
+            <div class="content">
+                <!-- Dashboard View -->
+                <div id="adminKampusDashboardView">
+                    <div class="stats-grid">
+                        <div class="stat-card purple">
+                            <div class="stat-info">
+                                <h3>Total UKM</h3>
+                                <div class="number">12</div>
+                            </div>
+                            <div class="stat-icon">🏢</div>
+                        </div>
+                        <div class="stat-card blue">
+                            <div class="stat-info">
+                                <h3>Total Kegiatan</h3>
+                                <div class="number">45</div>
+                            </div>
+                            <div class="stat-icon">📅</div>
+                        </div>
+                        <div class="stat-card green">
+                            <div class="stat-info">
+                                <h3>Peserta Aktif</h3>
+                                <div class="number">345</div>
+                            </div>
+                            <div class="stat-icon">👥</div>
+                        </div>
+                        <div class="stat-card yellow">
+                            <div class="stat-info">
+                                <h3>Perlu Approve</h3>
+                                <div class="number">8</div>
+                            </div>
+                            <div class="stat-icon">📄</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Approval Kegiatan UKM</h3>
+                        </div>
+                        <div id="approvalList"></div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Laporan Kegiatan Terbaru</h3>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                            <div style="border: 2px solid #e0e0e0; border-radius: 12px; padding: 20px;">
+                                <h4 style="margin-bottom: 15px;">Kegiatan Terbanyak</h4>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                    <span>UKM IT</span>
+                                    <strong>15 kegiatan</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                    <span>UKM Olahraga</span>
+                                    <strong>12 kegiatan</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>UKM Seni</span>
+                                    <strong>10 kegiatan</strong>
+                                </div>
+                            </div>
+                            <div style="border: 2px solid #e0e0e0; border-radius: 12px; padding: 20px;">
+                                <h4 style="margin-bottom: 15px;">Partisipasi Tertinggi</h4>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                    <span>Turnamen Futsal</span>
+                                    <strong>200 peserta</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                    <span>Seminar AI</span>
+                                    <strong>150 peserta</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Workshop Design</span>
+                                    <strong>100 peserta</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Approval Kegiatan View -->
+                <div id="approvalKegiatanView" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Approval Kegiatan UKM</h3>
+                        </div>
+                        <div id="approvalDetailList"></div>
+                    </div>
+                </div>
+
+                <!-- Laporan View -->
+                <div id="laporanView" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Laporan Kegiatan</h3>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn-primary" style="background: #27ae60;" onclick="exportToExcel()">📊 Export Excel</button>
+                            </div>
+                        </div>
+                        <div class="filter-container">
+                            <select id="filterUKM" class="form-group" style="padding: 8px; border-radius: 8px;">
+                                <option value="">Semua UKM</option>
+                                <option value="UKM IT">UKM IT</option>
+                                <option value="UKM Olahraga">UKM Olahraga</option>
+                                <option value="UKM Seni">UKM Seni</option>
+                                <option value="UKM Kewirausahaan">UKM Kewirausahaan</option>
+                            </select>
+                            <input type="date" id="filterStartDate" class="form-group" style="padding: 8px; border-radius: 8px;">
+                            <input type="date" id="filterEndDate" class="form-group" style="padding: 8px; border-radius: 8px;">
+                            <button class="btn-primary" onclick="filterLaporan()">Terapkan Filter</button>
+                        </div>
+                        <div id="filteredLaporan"></div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Status Kegiatan</h3>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div>
+                                <h4>Kegiatan Aktif</h4>
+                                <div id="kegiatanAktifList"></div>
+                            </div>
+                            <div>
+                                <h4>Kegiatan Selesai</h4>
+                                <div id="kegiatanSelesaiList"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kelola UKM View -->
+                <div id="kelolaUKMView" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Kelola UKM</h3>
+                            <button class="btn-primary" onclick="tambahUKM()">➕ Tambah UKM</button>
+                        </div>
+                        <div id="kelolaUKMList"></div>
+                    </div>
+                </div>
+
+                <!-- Filter Data View -->
+                <div id="filterDataView" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Filter Data Lanjutan</h3>
+                        </div>
+                        <div class="filter-container">
+                            <select id="filterJenisData" class="form-group" style="padding: 8px; border-radius: 8px;">
+                                <option value="kegiatan">Data Kegiatan</option>
+                                <option value="pendaftar">Data Pendaftar</option>
+                                <option value="ukm">Data UKM</option>
+                            </select>
+                            <select id="filterStatus" class="form-group" style="padding: 8px; border-radius: 8px;">
+                                <option value="">Semua Status</option>
+                                <option value="approved">Disetujui</option>
+                                <option value="pending">Pending</option>
+                                <option value="rejected">Ditolak</option>
+                            </select>
+                            <input type="text" id="filterKeyword" placeholder="Kata kunci..." class="form-group" style="padding: 8px; border-radius: 8px;">
+                            <button class="btn-primary" onclick="applyAdvancedFilter()">Terapkan Filter</button>
+                        </div>
+                        <div id="filteredDataResult"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Pop-up -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle"></h3>
+            <div id="modalBody"></div>
+            <div id="modalActions"></div>
+        </div>
+    </div>
+
+    <!-- Modal Notifikasi -->
+    <div id="notificationModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <span class="close-modal" onclick="closeNotificationModal()">&times;</span>
+            <h3>Notifikasi Validasi</h3>
+            <div id="notificationList"></div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // Data Storage
+        let currentUser = null;
+        const mahasiswaData = [];
+        const notifications = [];
+        const ukmListData = [
+            { id: 1, nama: 'UKM IT', deskripsi: 'Komunitas teknologi dan programming', totalKegiatan: 8, ketua: 'Ahmad Rizki', status: 'active' },
+            { id: 2, nama: 'UKM Olahraga', deskripsi: 'Komunitas olahraga dan kesehatan', totalKegiatan: 12, ketua: 'Budi Santoso', status: 'active' },
+            { id: 3, nama: 'UKM Seni', deskripsi: 'Komunitas seni dan budaya', totalKegiatan: 10, ketua: 'Citra Dewi', status: 'active' },
+            { id: 4, nama: 'UKM Kewirausahaan', deskripsi: 'Komunitas bisnis dan entrepreneurship', totalKegiatan: 6, ketua: 'Dian Sari', status: 'active' },
+        ];
+
+        // User Credentials
+        const users = {
+            mahasiswa: { username: 'mahasiswa', password: 'mhs123', name: 'Budi Santoso', nim: '2021001' },
+            admin_ukm: { username: 'adminukm', password: 'ukm123', name: 'Admin UKM IT' },
+            admin_kampus: { username: 'adminkampus', password: 'kampus123', name: 'Admin Kampus' }
+        };
+
+        const kegiatanData = [
+            { id: 1, nama: 'Workshop Design Thinking', ukm: 'UKM Kewirausahaan', tanggal: '2025-01-15', kuota: 30, terdaftar: 15, status: 'approved' },
+            { id: 2, nama: 'Turnamen Futsal Antar Fakultas', ukm: 'UKM Olahraga', tanggal: '2025-01-20', kuota: 100, terdaftar: 45, status: 'approved' },
+            { id: 3, nama: 'Seminar Teknologi AI', ukm: 'UKM IT', tanggal: '2025-01-18', kuota: 50, terdaftar: 38, status: 'pending' },
+            { id: 4, nama: 'Kompetisi Coding Challenge', ukm: 'UKM IT', tanggal: '2025-01-25', kuota: 40, terdaftar: 28, status: 'approved' },
+        ];
+
+        const pendaftaranData = [
+            { id: 1, kegiatanId: 1, mahasiswa: 'Budi Santoso', nim: '2021001', status: 'approved', tanggalDaftar: '2024-12-01' },
+            { id: 2, kegiatanId: 2, mahasiswa: 'Ani Wulandari', nim: '2021002', status: 'pending', tanggalDaftar: '2024-12-02' },
+            { id: 3, kegiatanId: 3, mahasiswa: 'Citra Dewi', nim: '2021003', status: 'approved', tanggalDaftar: '2024-12-03' },
+        ];
+
+        // Fungsi untuk menampilkan halaman registrasi
+        function showRegisterPage() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('registerPage').style.display = 'flex';
+        }
+
+        // Fungsi untuk kembali ke login
+        function showLoginPage() {
+            document.getElementById('registerPage').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'flex';
+        }
+
+        // Registrasi mahasiswa
+        document.getElementById('registerForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                showToast('Password tidak cocok!', 'error');
+                return;
+            }
+            
+            const newUser = {
+                nama: document.getElementById('regNama').value,
+                nim: document.getElementById('regNIM').value,
+                prodi: document.getElementById('regProdi').value,
+                email: document.getElementById('regEmail').value,
+                username: document.getElementById('regUsername').value,
+                password: password,
+                role: 'mahasiswa'
+            };
+            
+            mahasiswaData.push(newUser);
+            
+            // Tambahkan ke users untuk login
+            users[newUser.username] = {
+                username: newUser.username,
+                password: newUser.password,
+                name: newUser.nama,
+                nim: newUser.nim,
+                role: 'mahasiswa'
+            };
+            
+            showToast('Registrasi berhasil! Silakan login.', 'success');
+            setTimeout(() => showLoginPage(), 1500);
+        });
+
+        // Login Handler
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const role = document.getElementById('roleSelect').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Cek credentials dari users object atau dari mahasiswaData
+            let userFound = false;
+            let userData = null;
+            
+            if (users[username] && users[username].password === password) {
+                userFound = true;
+                userData = users[username];
+            } else {
+                // Cek di mahasiswaData untuk user yang sudah registrasi
+                for (const user of Object.values(users)) {
+                    if (user.username === username && user.password === password) {
+                        userFound = true;
+                        userData = user;
+                        break;
+                    }
+                }
+            }
+            
+            if (userFound) {
+                currentUser = { ...userData, role: userData.role };
+                
+                showToast('Login berhasil! Selamat datang ' + currentUser.name, 'success');
+                
+                setTimeout(() => {
+                    document.getElementById('loginPage').style.display = 'none';
+                    document.getElementById('registerPage').style.display = 'none';
+                    
+                    if (currentUser.role === 'mahasiswa') {
+                        document.getElementById('dashboardMahasiswa').classList.add('active');
+                        document.getElementById('mahasiswaName').textContent = currentUser.name;
+                        showDashboardMahasiswa();
+                    } else if (currentUser.role === 'admin_ukm') {
+                        document.getElementById('dashboardAdminUKM').classList.add('active');
+                        showDashboardAdminUKM();
+                    } else {
+                        document.getElementById('dashboardAdminKampus').classList.add('active');
+                        showDashboardAdminKampus();
+                    }
+                }, 1000);
+            } else {
+                showToast('Username atau password salah!', 'error');
+            }
+        });
+
+        // Logout Handler
+        function logout() {
+            showModal(
+                'Konfirmasi Logout',
+                'Apakah Anda yakin ingin keluar?',
+                [
+                    { text: 'Batal', class: 'modal-btn modal-btn-secondary', onClick: closeModal },
+                    { text: 'Logout', class: 'modal-btn modal-btn-danger', onClick: () => {
+                        closeModal();
+                        showToast('Logout berhasil!', 'success');
+                        setTimeout(() => {
+                            document.querySelectorAll('.dashboard').forEach(d => d.classList.remove('active'));
+                            document.getElementById('loginPage').style.display = 'flex';
+                            document.getElementById('registerPage').style.display = 'none';
+                            document.getElementById('loginForm').reset();
+                            currentUser = null;
+                        }, 500);
+                    }}
+                ]
+            );
+        }
+
+        // Toggle Sidebar
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('collapsed');
+        }
+
+        // ==================== FUNGSI MAHASISWA ====================
+
+        function showDashboardMahasiswa() {
+            hideAllMahasiswaViews();
+            document.getElementById('mahasiswaDashboardView').style.display = 'block';
+            updateActiveMenu(0);
+            loadMahasiswaDashboard();
+        }
+
+        function showDaftarUKM() {
+            hideAllMahasiswaViews();
+            document.getElementById('daftarUKMView').style.display = 'block';
+            updateActiveMenu(1);
+            loadDaftarUKM();
+        }
+
+        function showKegiatanTersedia() {
+            hideAllMahasiswaViews();
+            document.getElementById('kegiatanTersediaView').style.display = 'block';
+            updateActiveMenu(2);
+            loadKegiatanTersedia();
+        }
+
+        function showPendaftaranSaya() {
+            hideAllMahasiswaViews();
+            document.getElementById('pendaftaranSayaView').style.display = 'block';
+            updateActiveMenu(3);
+            loadStatusPendaftaran();
+        }
+
+        function hideAllMahasiswaViews() {
+            document.getElementById('mahasiswaDashboardView').style.display = 'none';
+            document.getElementById('daftarUKMView').style.display = 'none';
+            document.getElementById('kegiatanTersediaView').style.display = 'none';
+            document.getElementById('pendaftaranSayaView').style.display = 'none';
+        }
+
+        // Load Mahasiswa Dashboard
+        function loadMahasiswaDashboard() {
+            const kegiatanList = document.getElementById('kegiatanList');
+            kegiatanList.innerHTML = kegiatanData
+                .filter(k => k.status === 'approved')
+                .map(k => `
+                    <div class="activity-item">
+                        <div class="activity-header">
+                            <div>
+                                <div class="activity-title">${k.nama}</div>
+                                <div class="activity-ukm">${k.ukm}</div>
+                            </div>
+                            <span class="badge success">${k.terdaftar}/${k.kuota} Peserta</span>
+                        </div>
+                        <div class="activity-meta">
+                            <span>📅 ${k.tanggal}</span>
+                        </div>
+                        <button class="btn-register" onclick="daftarKegiatan(${k.id})">Daftar Sekarang</button>
+                    </div>
+                `).join('');
+
+            const pendaftaranList = document.getElementById('pendaftaranList');
+            pendaftaranList.innerHTML = pendaftaranData
+                .filter(p => p.mahasiswa === currentUser.name)
+                .map(p => {
+                    const kegiatan = kegiatanData.find(k => k.id === p.kegiatanId);
+                    return `
+                        <div class="activity-item">
+                            <div class="activity-header">
+                                <div>
+                                    <div class="activity-title">${kegiatan.nama}</div>
+                                    <div class="activity-ukm">${kegiatan.tanggal}</div>
+                                </div>
+                                <span class="badge ${p.status === 'approved' ? 'success' : 'warning'}">
+                                    ${p.status === 'approved' ? 'Diterima' : 'Menunggu'}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            // Search functionality
+            document.getElementById('searchKegiatan')?.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const items = document.querySelectorAll('#kegiatanList .activity-item');
+                items.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(searchTerm) ? 'block' : 'none';
+                });
+            });
+        }
+
+        function loadDaftarUKM() {
+            const ukmList = document.getElementById('ukmList');
+            ukmList.innerHTML = ukmListData.map(ukm => `
+                <div class="activity-item">
+                    <div class="activity-header">
+                        <div>
+                            <div class="activity-title">${ukm.nama}</div>
+                            <div class="activity-ukm">${ukm.deskripsi}</div>
+                        </div>
+                        <span class="badge info">${ukm.totalKegiatan} Kegiatan</span>
+                    </div>
+                    <div class="activity-meta">
+                        <span>👤 Ketua: ${ukm.ketua}</span>
+                        <span>📊 Status: ${ukm.status === 'active' ? 'Aktif' : 'Non-Aktif'}</span>
+                    </div>
+                    <button class="btn-register" onclick="lihatKegiatanUKM('${ukm.nama}')">Lihat Kegiatan</button>
+                </div>
+            `).join('');
+
+            // Search functionality untuk UKM
+            document.getElementById('searchUKM')?.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const items = document.querySelectorAll('#ukmList .activity-item');
+                items.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(searchTerm) ? 'block' : 'none';
+                });
+            });
+        }
+
+        function lihatKegiatanUKM(ukmNama) {
+            showKegiatanTersedia();
+            const kegiatanUKM = kegiatanData.filter(k => k.ukm === ukmNama && k.status === 'approved');
+            document.getElementById('kegiatanDetailList').innerHTML = kegiatanUKM.map(k => `
+                <div class="activity-item">
+                    <div class="activity-header">
+                        <div>
+                            <div class="activity-title">${k.nama}</div>
+                            <div class="activity-ukm">${k.ukm}</div>
+                        </div>
+                        <span class="badge success">${k.terdaftar}/${k.kuota} Peserta</span>
+                    </div>
+                    <div class="activity-meta">
+                        <span>📅 ${k.tanggal}</span>
+                    </div>
+                    <button class="btn-register" onclick="daftarKegiatan(${k.id})">Daftar Sekarang</button>
+                </div>
+            `).join('');
+        }
+
+        function loadKegiatanTersedia() {
+            const kegiatanDetailList = document.getElementById('kegiatanDetailList');
+            kegiatanDetailList.innerHTML = kegiatanData
+                .filter(k => k.status === 'approved')
+                .map(k => `
+                    <div class="activity-item">
+                        <div class="activity-header">
+                            <div>
+                                <div class="activity-title">${k.nama}</div>
+                                <div class="activity-ukm">${k.ukm}</div>
+                            </div>
+                            <span class="badge success">${k.terdaftar}/${k.kuota} Peserta</span>
+                        </div>
+                        <div class="activity-meta">
+                            <span>📅 ${k.tanggal}</span>
+                        </div>
+                        <button class="btn-register" onclick="daftarKegiatan(${k.id})">Daftar Sekarang</button>
+                    </div>
+                `).join('');
+
+            // Search functionality untuk kegiatan detail
+            document.getElementById('searchKegiatanDetail')?.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const items = document.querySelectorAll('#kegiatanDetailList .activity-item');
+                items.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(searchTerm) ? 'block' : 'none';
+                });
+            });
+        }
+
+        function loadStatusPendaftaran() {
+            const statusPendaftaranList = document.getElementById('statusPendaftaranList');
+            const userPendaftaran = pendaftaranData.filter(p => p.mahasiswa === currentUser.name);
+            
+            if (userPendaftaran.length === 0) {
+                statusPendaftaranList.innerHTML = '<p style="text-align: center; color: #666;">Belum ada pendaftaran</p>';
+                return;
+            }
+
+            statusPendaftaranList.innerHTML = userPendaftaran.map(p => {
+                const kegiatan = kegiatanData.find(k => k.id === p.kegiatanId);
+                return `
+                    <div class="activity-item">
+                        <div class="activity-header">
+                            <div>
+                                <div class="activity-title">${kegiatan.nama}</div>
+                                <div class="activity-ukm">${kegiatan.ukm}</div>
+                            </div>
+                            <span class="badge ${p.status === 'approved' ? 'success' : p.status === 'rejected' ? 'danger' : 'warning'}">
+                                ${p.status === 'approved' ? 'Diterima' : p.status === 'rejected' ? 'Ditolak' : 'Menunggu'}
+                            </span>
+                        </div>
+                        <div class="activity-meta">
+                            <span>📅 Tanggal Kegiatan: ${kegiatan.tanggal}</span>
+                            <span>📝 Tanggal Daftar: ${p.tanggalDaftar}</span>
+                        </div>
+                        ${p.status === 'approved' ? '<p style="color: #27ae60; margin-top: 10px;">✓ Pendaftaran Anda telah diterima</p>' : ''}
+                        ${p.status === 'rejected' ? '<p style="color: #e74c3c; margin-top: 10px;">✗ Pendaftaran Anda ditolak</p>' : ''}
+                        ${p.status === 'pending' ? '<p style="color: #f39c12; margin-top: 10px;">⏳ Menunggu persetujuan Admin UKM</p>' : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function daftarKegiatan(id) {
+            const kegiatan = kegiatanData.find(k => k.id === id);
+            
+            // Cek apakah sudah mendaftar
+            const sudahDaftar = pendaftaranData.some(p => 
+                p.kegiatanId === id && p.mahasiswa === currentUser.name
+            );
+            
+            if (sudahDaftar) {
+                showToast('Anda sudah mendaftar kegiatan ini!', 'error');
+                return;
+            }
+            
+            // Cek kuota
+            if (kegiatan.terdaftar >= kegiatan.kuota) {
+                showToast('Kuota sudah penuh!', 'error');
+                return;
+            }
+            
+            showModal(
+                'Konfirmasi Pendaftaran',
+                `
+                    <div style="line-height: 1.8;">
+                        <p><strong>Kegiatan:</strong> ${kegiatan.nama}</p>
+                        <p><strong>UKM:</strong> ${kegiatan.ukm}</p>
+                        <p><strong>Tanggal:</strong> ${kegiatan.tanggal}</p>
+                        <p><strong>Kuota:</strong> ${kegiatan.kuota} peserta</p>
+                        <p><strong>Terdaftar:</strong> ${kegiatan.terdaftar} peserta</p>
+                        <br>
+                        <p>Apakah Anda yakin ingin mendaftar kegiatan ini?</p>
+                    </div>
+                `,
+                [
+                    { text: 'Batal', class: 'modal-btn modal-btn-secondary', onClick: closeModal },
+                    { text: 'Daftar', class: 'modal-btn modal-btn-primary', onClick: () => {
+                        closeModal();
+                        showToast('Pendaftaran berhasil! Menunggu persetujuan Admin UKM', 'success');
+                        const newPendaftaran = {
+                            id: pendaftaranData.length + 1,
+                            kegiatanId: id,
+                            mahasiswa: currentUser.name,
+                            nim: currentUser.nim,
+                            status: 'pending',
+                            tanggalDaftar: new Date().toISOString().split('T')[0]
+                        };
+                        pendaftaranData.push(newPendaftaran);
+                        kegiatan.terdaftar++;
+                        
+                        // Tambahkan notifikasi untuk admin UKM
+                        addNotification(`Mahasiswa ${currentUser.name} mendaftar kegiatan "${kegiatan.nama}"`, 'info');
+                        
+                        setTimeout(() => {
+                            loadMahasiswaDashboard();
+                            loadStatusPendaftaran();
+                        }, 500);
+                    }}
+                ]
+            );
+        }
+
+        // ==================== FUNGSI ADMIN UKM ====================
+
+        function showDashboardAdminUKM() {
+            hideAllAdminUKMViews();
+            document.getElementById('adminUKMDashboardView').style.display = 'block';
+            updateActiveMenu(0);
+            loadAdminUKMDashboard();
+        }
+
+        function showKelolaKegiatan() {
+            hideAllAdminUKMViews();
+            document.getElementById('kelolaKegiatanView').style.display = 'block';
+            updateActiveMenu(1);
+            loadKelolaKegiatan();
+        }
+
+        function showPendaftarAdmin() {
+            hideAllAdminUKMViews();
+            document.getElementById('pendaftarAdminView').style.display = 'block';
+            updateActiveMenu(2);
+            loadPendaftarAdmin();
+        }
+
+        function showDaftarUKMAdmin() {
+            hideAllAdminUKMViews();
+            document.getElementById('daftarUKMAdminView').style.display = 'block';
+            updateActiveMenu(3);
+            loadDaftarUKMAdmin();
+        }
+
+        function hideAllAdminUKMViews() {
+            document.getElementById('adminUKMDashboardView').style.display = 'none';
+            document.getElementById('kelolaKegiatanView').style.display = 'none';
+            document.getElementById('pendaftarAdminView').style.display = 'none';
+            document.getElementById('daftarUKMAdminView').style.display = 'none';
+        }
+
+        // Load Admin UKM Dashboard
+        function loadAdminUKMDashboard() {
+            const adminKegiatanList = document.getElementById('adminKegiatanList');
+            const kegiatanAdmin = kegiatanData.filter(k => k.ukm === 'UKM IT'); // Filter berdasarkan UKM admin
+            adminKegiatanList.innerHTML = kegiatanAdmin.map(k => `
+                <div class="activity-item">
+                    <div class="activity-header">
+                        <div>
+                            <div class="activity-title">${k.nama}</div>
+                            <div class="activity-ukm">${k.tanggal}</div>
+                        </div>
+                        <div class="action-btns">
+                            <button class="btn-icon btn-edit" onclick="editKegiatan(${k.id})">✏️</button>
+                            <button class="btn-icon btn-delete" onclick="hapusKegiatan(${k.id})">🗑️</button>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>Peserta: ${k.terdaftar}/${k.kuota}</span>
+                        <span class="badge ${k.status === 'approved' ? 'success' : k.status === 'rejected' ? 'danger' : 'warning'}">
+                            ${k.status === 'approved' ? 'Disetujui' : k.status === 'rejected' ? 'Ditolak' : 'Pending'}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+
+            // Update stats
+            document.querySelector('.stat-card .number:nth-child(2)').textContent = kegiatanAdmin.length;
+            const totalPendaftar = pendaftaranData.filter(p => {
+                const kegiatan = kegiatanData.find(k => k.id === p.kegiatanId);
+                return kegiatan && kegiatan.ukm === 'UKM IT';
+            }).length;
+            document.querySelectorAll('.stat-card .number')[1].textContent = totalPendaftar;
+            const pendingCount = pendaftaranData.filter(p => {
+                if (p.status !== 'pending') return false;
+                const kegiatan = kegiatanData.find(k => k.id === p.kegiatanId);
+                return kegiatan && kegiatan.ukm === 'UKM IT';
+            }).length;
+            document.querySelectorAll('.stat-card .number')[2].textContent = pendingCount;
+        }
+
+        function loadKelolaKegiatan() {
+            const kelolaKegiatanList = document.getElementById('kelolaKegiatanList');
+            const kegiatanAdmin = kegiatanData.filter(k => k.ukm === 'UKM IT');
+            kelolaKegiatanList.innerHTML = kegiatanAdmin.map(k => `
+                <div class="activity-item">
+                    <div class="activity-header">
+                        <div>
+                            <div class="activity-title">${k.nama}</div>
+                            <div class="activity-ukm">${k.tanggal}</div>
+                        </div>
+                        <div class="action-btns">
+                            <button class="btn-icon btn-edit" onclick="editKegiatan(${k.id})">✏️</button>
+                            <button class="btn-icon btn-delete" onclick="hapusKegiatan(${k.id})">🗑️</button>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>Peserta: ${k.terdaftar}/${k.kuota}</span>
+                        <span class="badge ${k.status === 'approved' ? 'success' : k.status === 'rejected' ? 'danger' : 'warning'}">
+                            ${k.status === 'approved' ? 'Disetujui' : k.status === 'rejected' ? 'Ditolak' : 'Pending'}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+
+            // Search functionality
+            document.getElementById('searchKegiatanAdmin')?.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const items = document.querySelectorAll('#kelolaKegiatanList .activity-item');
+                items.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(searchTerm) ? 'block' : 'none';
+                });
+            });
+        }
+
+        function loadPendaftarAdmin() {
+            const pendaftarTable = document.getElementById('pendaftarTable');
+            const pendaftarAdmin = pendaftaranData.filter(p => {
+                const kegiatan = kegiatanData.find(k => k.id === p.kegiatanId);
+                return kegiatan && kegiatan.ukm === 'UKM IT';
+            });
+            
+            pendaftarTable.innerHTML = pendaftarAdmin.map(p => {
+                const kegiatan = kegiatanData.find(k => k.id === p.kegiatanId);
+                return `
+                    <tr>
+                        <td>${p.mahasiswa}</td>
+                        <td>${p.nim}</td>
+                        <td>${kegiatan.nama}</td>
+                        <td>${p.tanggalDaftar}</td>
+                        <td><span class="badge ${p.status === 'approved' ? 'success' : p.status === 'rejected' ? 'danger' : 'warning'}">${p.status === 'approved' ? 'Diterima' : p.status === 'rejected' ? 'Ditolak' : 'Pending'}</span></td>
+                        <td>
+                            ${p.status === 'pending' ? `
+                                <div class="action-btns">
+                                    <button class="btn-icon btn-approve" onclick="approvePendaftar(${p.id})">✅</button>
+                                    <button class="btn-icon btn-reject" onclick="rejectPendaftar(${p.id})">❌</button>
+                                </div>
+                            ` : '-'}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function loadDaftarUKMAdmin() {
+            const ukmAdminList = document.getElementById('ukmAdminList');
+            ukmAdminList.innerHTML = ukmListData.filter(ukm => ukm.nama === 'UKM IT').map(ukm => `
+                <div class="activity-item">
+                    <div class="activity-header">
+                        <div>
+                            <div class="activity-title">${ukm.nama}</div>
+                            <div class="activity-ukm">${ukm.deskripsi}</div>
+                        </div>
+                        <span class="badge ${ukm.status === 'active' ? 'success' : 'danger'}">${ukm.status === 'active' ? 'Aktif' : 'Non-Aktif'}</span>
+                    </div>
+                    <div class="activity-meta">
+                        <span>👤 Ketua: ${ukm.ketua}</span>
+                        <span>📊 Total Kegiatan: ${ukm.totalKegiatan}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function tambahKegiatan() {
+            showModal(
+                'Tambah Kegiatan Baru',
+                `
+                    <form class="modal-form" id="tambahForm">
+                        <div class="form-group">
+                            <label>Nama Kegiatan</label>
+                            <input type="text" id="namaKegiatan" placeholder="Masukkan nama kegiatan" required>
+                        </div>
+                        <div class="form-group">
+                            <label>UKM</label>
+                            <select id="namaUKM" required>
+                                <option value="UKM IT">UKM IT</option>
+                                <option value="UKM Olahraga">UKM Olahraga</option>
+                                <option value="UKM Seni">UKM Seni</option>
+                                <option value="UKM Kewirausahaan">UKM Kewirausahaan</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Deskripsi</label>
+                            <textarea id="deskripsiKegiatan" placeholder="Masukkan deskripsi kegiatan" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal</label>
+                            <input type="date" id="tanggalKegiatan" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Kuota Peserta</label>
+                            <input type="number" id="kuotaKegiatan" min="1" placeholder="Masukkan kuota" required>
+                        </div>
+                    </form>
+                `,
+                [
+                    { text: 'Batal', class: 'modal-btn modal-btn-secondary', onClick: closeModal },
+                    { text: 'Tambah', class: 'modal-btn modal-btn-primary', onClick: () => {
+                        const nama = document.getElementById('namaKegiatan').value;
+                        const ukm = document.getElementById('namaUKM').value;
+                        const deskripsi = document.getElementById('deskripsiKegiatan').value;
+                        const tanggal = document.getElementById('tanggalKegiatan').value;
+                        const kuota = parseInt(document.getElementById('kuotaKegiatan').value);
+                        
+                        if (nama && tanggal && kuota && deskripsi) {
+                            const newKegiatan = {
+                                id: kegiatanData.length + 1,
+                                nama: nama,
+                                ukm: ukm,
+                                deskripsi: deskripsi,
+                                tanggal: tanggal,
+                                kuota: kuota,
+                                terdaftar: 0,
+                                status: 'pending'
+                            };
+                            kegiatanData.push(newKegiatan);
+                            closeModal();
+                            showToast('Kegiatan berhasil ditambahkan! Menunggu persetujuan Admin Kampus', 'success');
+                            loadAdminUKMDashboard();
+                            loadKelolaKegiatan();
+                        } else {
+                            showToast('Mohon lengkapi semua field!', 'error');
+                        }
+                    }}
+                ]
+            );
+        }
+
+        function editKegiatan(id) {
+            const kegiatan = kegiatanData.find(k => k.id === id);
+            showModal(
+                'Edit Kegiatan',
+                `
+                    <form class="modal-form" id="editForm">
+                        <div class="form-group">
+                            <label>Nama Kegiatan</label>
+                            <input type="text" value="${kegiatan.nama}" id="editNama" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Deskripsi</label>
+                            <textarea id="editDeskripsi" required>${kegiatan.deskripsi || ''}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal</label>
+                            <input type="date" value="${kegiatan.tanggal}" id="editTanggal" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Kuota</label>
+                            <input type="number" value="${kegiatan.kuota}" id="editKuota" required>
+                        </div>
+                    </form>
+                `,
+                [
+                    { text: 'Batal', class: 'modal-btn modal-btn-secondary', onClick: closeModal },
+                    { text: 'Simpan', class: 'modal-btn modal-btn-primary', onClick: () => {
+                        kegiatan.nama = document.getElementById('editNama').value;
+                        kegiatan.deskripsi = document.getElementById('editDeskripsi').value;
+                        kegiatan.tanggal = document.getElementById('editTanggal').value;
+                        kegiatan.kuota = parseInt(document.getElementById('editKuota').value);
+                        closeModal();
+                        showToast('Kegiatan berhasil diupdate!', 'success');
+                        loadAdminUKMDashboard();
+                        loadKelolaKegiatan();
+                    }}
+                ]
+            );
+        }
+
+        function hapusKegiatan(id) {
+            const kegiatan = kegiatanData.find(k => k.id === id);
+            showModal(
+                'Hapus Kegiatan',
+                `Apakah Anda yakin ingin menghapus kegiatan <strong>"${kegiatan.nama}"</strong>?`,
+                [
+                    { text: 'Batal', class: 'modal-btn modal-btn-secondary', onClick: closeModal },
+                    { text: 'Hapus', class: 'modal-btn modal-btn-danger', onClick: () => {
+                        const index = kegiatanData.findIndex(k => k.id === id);
+                        kegiatanData.splice(index, 1);
+                        closeModal();
+                        showToast('Kegiatan berhasil dihapus!', 'success');
+                        loadAdminUKMDashboard();
+                        loadKelolaKegiatan();
+                    }}
+                ]
+            );
+        }
+
+        function approvePendaftar(id) {
+            const pendaftaran = pendaftaranData.find(p => p.id === id);
+            const kegiatan = kegiatanData.find(k => k.id === pendaftaran.kegiatanId);
+            showModal(
+                'Approve Pendaftar',
+                `Setujui pendaftaran <strong>${pendaftaran.mahasiswa}</strong> untuk kegiatan "${kegiatan.nama}"?`,
+                [
+                    { text: 'Batal', class: 'modal-btn modal-btn-secondary', onClick: closeModal },
+                    { text: 'Setujui', class: 'modal-btn modal-btn-success', onClick: () => {
+                        pendaftaran.status = 'approved';
+                        addNotification(`Pendaftaran ${pendaftaran.mahasiswa} untuk "${kegiatan.nama}" telah disetujui`, 'success');
+                        closeModal();
+                        showToast('Pendaftar berhasil disetujui!', 'success');
+                        loadPendaftarAdmin();
+                        loadAdminUKMDashboard();
+                    }}
+                ]
+            );
+        }
+
+        function rejectPendaftar(id) {
+            const pendaftaran = pendaftaranData.find(p => p.id === id);
+            const kegiatan = kegiatanData.find(k => k.id === pendaftaran.kegiatanId);
+            showModal(
+                'Tolak Pendaftar',
+                `
+                    <p>Tolak pendaftaran <strong>${pendaftaran.mahasiswa}</strong> untuk kegiatan "${kegiatan.nama}"?</p>
+                    <form class="modal-form" style="margin-top: 15px;">
+                        <div class="form-group">
+                            <label>Alasan Penolakan</label>
+                            <textarea id="alasanTolakPendaftar" placeholder="Masukkan alasan penolakan..." required></textarea>
+                        </div>
+                    </form>
+                `,
+                [
+                    { text: 'Batal', class: 'modal-btn modal-btn-secondary', onClick: closeModal },
+                    { text: 'Tolak', class: 'modal-btn modal-btn-danger', onClick: () => {
+                        const alasan = document.getElementById('alasanTolakPendaftar').value;
+                        if (alasan.trim()) {
+                            pendaftaran.status = 'rejected';
+                            kegiatan.terdaftar--;
+                            addNotification(`Pendaftaran ${pendaftaran.mahasiswa} untuk "${kegiatan.nama}" ditolak`, 'info');
+                            closeModal();
+                            showToast('Pendaftar berhasil ditolak!', 'info');
+                            loadPendaftarAdmin();
+                            loadAdminUKMDashboard();
+                        } else {
+                            showToast('Harap masukkan alasan penolakan!', 'error');
+                        }
+                    }}
+                ]
+            );
+        }
+
+        // ==================== FUNGSI ADMIN KAMPUS ====================
+
+        function showDashboardAdminKampus() {
+            hideAllAdminKampusViews();
+            document.getElementById('adminKampusDashboardView').style.display = 'block';
+            updateActiveMenu(0);
+            loadAdminKampusDashboard();
+        }
+
+        function showApprovalKegiatan() {
+            hideAllAdminKampusViews();
+            document.getElementById('approvalKegiatanView').style.display = 'block';
+            updateActiveMenu(1);
+            loadApprovalKegiatan();
+        }
+
+        function showLaporan() {
+            hideAllAdminKampusViews();
+            document.getElementById('laporanView').style.display = 'block';
+            updateActiveMenu(2);
+            loadLaporan();
+        }
+
+        function showKelolaUKM() {
+            hideAllAdminKampusViews();
+            document.getElementById('kelolaUKMView').style.display = 'block';
+            updateActiveMenu(3);
+            loadKelolaUKM();
+        }
+
+        function showFilterData() {
+            hideAllAdminKampusViews();
+            document.getElementById('filterDataView').style.display = 'block';
+            updateActiveMenu(4);
+        }
+
+        function hideAllAdminKampusViews() {
+            document.getElementById('adminKampusDashboardView').style.display = 'none';
+            document.getElementById('approvalKegiatanView').style.display = 'none';
+            document.getElementById('laporanView').style.display = 'none';
+            document.getElementById('kelolaUKMView').style.display = 'none';
+            document.getElementById('filterDataView').style.display = 'none';
+        }
+
+        // Load Admin Kampus Dashboard
+        function loadAdminKampusDashboard() {
+            const approvalList = document.getElementById('approvalList');
+            const kegiatanPending = kegiatanData.filter(k => k.status === 'pending');
+            
+            approvalList.innerHTML = kegiatanPending.map(k => `
+                <div class="activity-item">
+                    <div class="activity-header" style="align-items: center;">
+                        <div style="flex: 1;">
+                            <div class="activity-title">${k.nama}</div>
+                            <div class="activity-ukm">${k.ukm}</div>
+                            <div class="activity-meta">
+                                <span>📅 ${k.tanggal}</span>
+                                <span>👥 Kuota: ${k.kuota}</span>
+                                <span>📝 Terdaftar: ${k.terdaftar}</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
+                            <span class="badge warning">Menunggu</span>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn-primary" style="background: #27ae60;" onclick="approveKegiatan(${k.id})">Setujui</button>
+                                <button class="btn-primary" style="background: #e74c3c;" onclick="rejectKegiatan(${k.id})">Tolak</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Update stats
+            document.querySelectorAll('.stat-card .number')[0].textContent = ukmListData.length;
+            document.querySelectorAll('.stat-card .number')[1].textContent = kegiatanData.length;
+            document.querySelectorAll('.stat-card .number')[2].textContent = pendaftaranData.filter(p => p.status === 'approved').length;
+            document.querySelectorAll('.stat-card .number')[3].textContent = kegiatanPending.length;
+        }
+
+        function loadApprovalKegiatan() {
+            const approvalDetailList = document.getElementById('approvalDetailList');
+            const semuaKegiatan = [...kegiatanData].sort((a, b) => {
+                // Urutkan: pending dulu, lalu berdasarkan tanggal
+                if (a.status === 'pending' && b.status !== 'pending') return -1;
+                if (a.status !== 'pending' && b.status === 'pending') return 1;
+                return new Date(a.tanggal) - new Date(b.tanggal);
+            });
+            
+            approvalDetailList.innerHTML = semuaKegiatan.map(k => `
+                <div class="activity-item">
+                    <div class="activity-header" style="align-items: center;">
+                        <div style="flex: 1;">
+                            <div class="activity-title">${k.nama}</div>
+                            <div class="activity-ukm">${k.ukm}</div>
+                            <div class="activity-meta">
+                                <span>📅 ${k.tanggal}</span>
+                                <span>👥 ${k.terdaftar}/${k.kuota} Peserta</span>
+                            </div>
+                            ${k.deskripsi ? `<p style="margin-top: 10px; color: #666;">${k.deskripsi}</p>` : ''}
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
+                            <span class="badge ${k.status === 'approved' ? 'success' : k.status === 'rejected' ? 'danger' : 'warning'}">
+                                ${k.status === 'approved' ? 'Disetujui' : k.status === 'rejected' ? 'Ditolak' : 'Menunggu'}
+                            </span>
+                            ${k.status === 'pending' ? `
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="btn-primary" style="background: #27ae60;" onclick="approveKegiatan(${k.id})">Setujui</button>
+                                    <button class="btn-primary" style="background: #e74c3c;" onclick="rejectKegiatan(${k.id})">Tolak</button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadLaporan() {
+            filterLaporan();
+            loadStatusKegiatan();
+        }
+
+        function filterLaporan() {
+            const ukmFilter = document.getElementById('filterUKM').value;
+            const startDate = document.getElementById('filterStartDate').value;
+            const endDate = document.getElementById('filterEndDate').value;
+            
+            let filtered = kegiatanData;
+            
+            if (ukmFilter) {
+                filtered = filtered.filter(k => k.ukm === ukmFilter);
+            }
+            
+            if (startDate) {
+                filtered = filtered.filter(k => k.tanggal >= startDate);
+            }
+            
+            if (endDate) {
+                filtered = filtered.filter(k => k.tanggal <= endDate);
+            }
+            
+            const laporan = document.getElementById('filteredLaporan');
+            laporan.innerHTML = filtered.map(k => `
+                <div class="activity-item">
+                    <div class="activity-header">
+                        <div>
+                            <div class="activity-title">${k.nama}</div>
+                            <div class="activity-ukm">${k.ukm}</div>
+                        </div>
+                        <span class="badge ${k.status === 'approved' ? 'success' : k.status === 'rejected' ? 'danger' : 'warning'}">
+                            ${k.status === 'approved' ? 'Disetujui' : k.status === 'rejected' ? 'Ditolak' : 'Pending'}
+                        </span>
+                    </div>
+                    <div class="activity-meta">
+                        <span>📅 ${k.tanggal}</span>
+                        <span>👥 ${k.terdaftar}/${k.kuota} Peserta</span>
+                        <span>📊 Partisipasi: ${Math.round((k.terdaftar / k.kuota) * 100)}%</span>
+                    </div>
+                    ${k.deskripsi ? `<p style="margin-top: 10px; color: #666;">${k.deskripsi}</p>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function loadStatusKegiatan() {
+            const sekarang = new Date().toISOString().split('T')[0];
+            
+            const aktif = kegiatanData.filter(k => k.tanggal >= sekarang && k.status === 'approved');
+            const selesai = kegiatanData.filter(k => k.tanggal < sekarang || k.status !== 'approved');
+            
+            document.getElementById('kegiatanAktifList').innerHTML = aktif.map(k => `
+                <div class="activity-item" style="margin-bottom: 10px; padding: 15px;">
+                    <div class="activity-title">${k.nama}</div>
+                    <div class="activity-ukm">${k.ukm} - ${k.tanggal}</div>
+                    <div class="activity-meta">
+                        <span>👥 ${k.terdaftar}/${k.kuota} Peserta</span>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('kegiatanSelesaiList').innerHTML = selesai.map(k => `
+                <div class="activity-item" style="margin-bottom: 10px; padding: 15px; opacity: 0.7;">
+                    <div class="activity-title">${k.nama}</div>
+                    <div class="activity-ukm">${k.ukm} - ${k.tanggal}</div>
+                    <div class="activity-meta">
+                        <span>👥 ${k.terdaftar}/${k.kuota} Peserta</span>
+                        <span class="badge ${k.status === 'approved' ? 'success' : k.status === 'rejected' ? 'danger' : 'warning'}">
+                            ${k.status === 'approved' ? 'Selesai' : k.status === 'rejected' ? 'Ditolak' : 'Pending'}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadKelolaUKM() {
+            const kelolaUKMList = document.getElementById('kelolaUKMList');
+            kelolaUKMList.innerHTML = ukmListData.map(ukm => `
+                <div class="activity-item">
+                    <div class="activity-header">
+                        <div>
+                            <div class="activity-title">${ukm.nama}</div>
+                            <div class="activity-ukm">${ukm.deskripsi}</div>
+                        </div>
+                        <div class="action-btns">
+                            <button class="btn-icon btn-edit" onclick="editUKM(${ukm.id})">✏️</button>
+                            <button class="btn-icon btn-delete" onclick="hapusUKM(${ukm.id})">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="activity-meta">
+                        <span>👤 Ketua: ${ukm.ketua}</span>
+                        <span>📊 Total Kegiatan: ${ukm.totalKegiatan}</span>
+                        <span class="badge ${ukm.status === 'active' ? 'success' : 'danger'}">${ukm.status === 'active' ? 'Aktif' : 'Non-Aktif'}</span>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <button class="btn-primary" style="background: ${ukm.status === 'active' ? '#e74c3c' : '#27ae60'};" onclick="toggleStatusUKM(${ukm.id})">
+                            ${ukm.status === 'active' ? 'Non-aktifkan' : 'Aktifkan'}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function approveKegiatan(id) {
+            const kegiatan = kegiatanData.find(k => k.id === id);
+            showModal(
+                'Approve Kegiatan',
+                `Setujui kegiatan <strong>"${kegiatan.nama}"</strong> dari ${kegiatan.ukm}?`,
+                [
+                    { text: 'Batal', class: 'modal-btn modal-btn-secondary', onClick: closeModal },
+                    { text: 'Setujui', class: 'modal-btn modal-btn-success', onClick: () => {
+                        kegiatan.status = 'approved';
+                        closeModal();
+                        showToast('Kegiatan berhasil disetujui!', 'success');
+                        loadAdminKampusDashboard();
+                        loadApprovalKegiatan();
+                        loadLaporan();
+                    }}
+                ]
+            );
+        }
+
+        function rejectKegiatan(id) {
+            const kegiatan = kegiatanData.find(k => k.id === id);
+            showModal(
+                'Tolak Kegiatan',
+                `
+                    <p>Tolak kegiatan <strong>"${kegiatan.nama}"</strong>?</p>
+                    <form class="modal-form" style="margin-top: 15px;">
+                        <div class="form-group">
+                            <label>Alasan Penolakan</label>
+                            <textarea id="alasanTolak" placeholder="Masukkan alasan penolakan..." required></textarea>
+                        </div>
+                    </form>
+                `,
+                [
+                    { text: 'Batal', class: 'modal-btn modal-btn-secondary', onClick: closeModal },
+                    { text: 'Tolak', class: 'modal-btn modal-btn-danger', onClick: () => {
+                        const alasan = document.getElementById('alasanTolak').value;
+                        if (alasan.trim()) {
+                            kegiatan.status = 'rejected';
+                            closeModal();
+                            showToast('Kegiatan ditolak dengan alasan: ' + alasan, 'info');
+                            loadAdminKampusDashboard();
+                            loadApprovalKegiatan();
+                            loadLaporan();
+                        } else {
+                            showToast('Harap masukkan alasan penolakan!', 'error');
+                        }
+                    }}
+                ]
+            );
+        }
+
+        function exportToExcel() {
+            // Simulasi export Excel
+            const data = kegiatanData.map(k => ({
+                'Nama Kegiatan': k.nama,
+                'UKM': k.ukm,
+                'Tanggal': k.tanggal,
+                'Kuota': k.kuota,
+                'Terdaftar': k.terdaftar,
+                'Status': k.status === 'approved' ? 'Disetujui' : k.status === 'rejected' ? 'Ditolak' : 'Pending',
+                'Partisipasi': `${Math.round((k.terdaftar / k.kuota) * 100)}%`
+            }));
+            
+            // Dalam implementasi real, gunakan library seperti SheetJS
+            // const worksheet = XLSX.utils.json_to_sheet(data);
+            // const workbook = XLSX.utils.book_new();
+            // XLSX.utils.book_append_sheet(workbook, worksheet, "Laporan");
+            // XLSX.writeFile(workbook, "Laporan_Kegiatan.xlsx");
+            
+            showToast('Data berhasil diexport ke Excel! (Simulasi)', 'success');
+        }
+
+        function applyAdvancedFilter() {
+            const jenisData = document.getElementById('filterJenisData').value;
+            const status = document.getElementById('filterStatus').value;
+            const keyword = document.getElementById('filterKeyword').value.toLowerCase();
+            
+            let result = '';
+            
+            if (jenisData === 'kegiatan') {
+                let filtered = kegiatanData;
+                
+                if (status) {
+                    filtered = filtered.filter(k => k.status === status);
+                }
+                
+                if (keyword) {
+                    filtered = filtered.filter(k => 
+                        k.nama.toLowerCase().includes(keyword) || 
+                        k.ukm.toLowerCase().includes(keyword)
+                    );
+                }
+                
+                result = filtered.map(k => `
+                    <div class="activity-item">
+                        <div class="activity-header">
+                            <div>
+                                <div class="activity-title">${k.nama}</div>
+                                <div class="activity-ukm">${k.ukm}</div>
+                            </div>
+                            <span class="badge ${k.status === 'approved' ? 'success' : k.status === 'rejected' ? 'danger' : 'warning'}">
+                                ${k.status === 'approved' ? 'Disetujui' : k.status === 'rejected' ? 'Ditolak' : 'Pending'}
+                            </span>
+                        </div>
+                        <div class="activity-meta">
+                            <span>📅 ${k.tanggal}</span>
+                            <span>👥 ${k.terdaftar}/${k.kuota} Peserta</span>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } else if (jenisData === 'pendaftar') {
+                let filtered = pendaftaranData;
+                
+                if (status) {
+                    filtered = filtered.filter(p => p.status === status);
+                }
+                
+                if (keyword) {
+                    filtered = filtered.filter(p => 
+                        p.mahasiswa.toLowerCase().includes(keyword) || 
+                        p.nim.toLowerCase().includes(keyword)
+                    );
+                }
+                
+                result = filtered.map(p => {
+                    const kegiatan = kegiatanData.find(k => k.id === p.kegiatanId);
+                    return `
+                        <div class="activity-item">
+                            <div class="activity-header">
+                                <div>
+                                    <div class="activity-title">${p.mahasiswa}</div>
+                                    <div class="activity-ukm">NIM: ${p.nim}</div>
+                                </div>
+                                <span class="badge ${p.status === 'approved' ? 'success' : p.status === 'rejected' ? 'danger' : 'warning'}">
+                                    ${p.status === 'approved' ? 'Diterima' : p.status === 'rejected' ? 'Ditolak' : 'Pending'}
+                                </span>
+                            </div>
+                            <div class="activity-meta">
+                                <span>📅 Kegiatan: ${kegiatan?.nama || 'Tidak ditemukan'}</span>
+                                <span>📝 UKM: ${kegiatan?.ukm || '-'}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+            } else if (jenisData === 'ukm') {
+                let filtered = ukmListData;
+                
+                if (status) {
+                    filtered = filtered.filter(u => (status === 'active' && u.status === 'active') || (status === 'inactive' && u.status !== 'active'));
+                }
+                
+                if (keyword) {
+                    filtered = filtered.filter(u => 
+                        u.nama.toLowerCase().includes(keyword) || 
+                        u.ketua.toLowerCase().includes(keyword)
+                    );
+                }
+                
+                result = filtered.map(u => `
+                    <div class="activity-item">
+                        <div class="activity-header">
+                            <div>
+                                <div class="activity-title">${u.nama}</div>
+                                <div class="activity-ukm">${u.deskripsi}</div>
+                            </div>
+                            <span class="badge ${u.status === 'active' ? 'success' : 'danger'}">
+                                ${u.status === 'active' ? 'Aktif' : 'Non-Aktif'}
+                            </span>
+                        </div>
+                        <div class="activity-meta">
+                            <span>👤 Ketua: ${u.ketua}</span>
+                            <span>📊 Total Kegiatan: ${u.totalKegiatan}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            document.getElementById('filteredDataResult').innerHTML = result || '<p style="text-align: center; color: #666;">Tidak ada data yang sesuai dengan filter</p>';
+        }
+
+        function tambahUKM() {
+            showModal(
+                'Tambah UKM Baru',
+                `
+                    <form class="modal-form" id="tambahUKMForm">
+                        <div class="form-group">
+                            <label>Nama UKM</label>
+                            <input type="text" id="namaUKMBaru" placeholder="Masukkan nama UKM" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Deskripsi</label>
+                            <textarea id="deskripsiUKM" placeholder="Masukkan deskripsi UKM" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Ketua</label>
+                            <input type="text" id="ketuaUKM" placeholder="Masukkan nama ketua" required>
+                        </div>
+                    </form>
+                `,
+                [
+                    { text: 'Batal', class: 'modal-btn modal-btn-secondary', onClick: closeModal },
+                    { text: 'Tambah', class: 'modal-btn modal-btn-primary', onClick: () => {
+                        const nama = document.getElementById('namaUKMBaru').value;
+                        const deskripsi = document.getElementById('deskripsiUKM').value;
+                        const ketua = document.getElementById('ketuaUKM').value;
+                        
+                        if (nama && deskripsi && ketua) {
+                            const newUKM = {
+                                id: ukmListData.length + 1,
+                                nama: nama,
+                                deskripsi: deskripsi,
+                                ketua: ketua,
+                                totalKegiatan: 0,
+                                status: 'active'
+                            };
+                            ukmListData.push(newUKM);
+                            closeModal();
+                            showToast('UKM berhasil ditambahkan!', 'success');
+                            loadKelolaUKM();
+                            loadAdminKampusDashboard();
+                        } else {
+                            showToast('Mohon lengkapi semua field!', 'error');
+                        }
+                    }}
+                ]
+            );
+        }
+
+        function editUKM(id) {
+            const ukm = ukmListData.find(u => u.id === id);
+            showModal(
+                'Edit UKM',
+                `
+                    <form class="modal-form" id="editUKMForm">
+                        <div class="form-group">
+                            <label>Nama UKM</label>
+                            <input type="text" value="${ukm.nama}" id="editNamaUKM" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Deskripsi</label>
+                            <textarea id="editDeskripsiUKM" required>${ukm.deskripsi}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Ketua</label>
+                            <input type="text" value="${ukm.ketua}" id="editKetuaUKM" required>
+                        </div>
+                    </form>
+                `,
+                [
+                    { text: 'Batal', class: 'modal-btn modal-btn-secondary', onClick: closeModal },
+                    { text: 'Simpan', class: 'modal-btn modal-btn-primary', onClick: () => {
+                        ukm.nama = document.getElementById('editNamaUKM').value;
+                        ukm.deskripsi = document.getElementById('editDeskripsiUKM').value;
+                        ukm.ketua = document.getElementById('editKetuaUKM').value;
+                        closeModal();
+                        showToast('UKM berhasil diupdate!', 'success');
+                        loadKelolaUKM();
+                        loadAdminKampusDashboard();
+                    }}
+                ]
+            );
+        }
+
+        function hapusUKM(id) {
+            const ukm = ukmListData.find(u => u.id === id);
+            showModal(
+                'Hapus UKM',
+                `Apakah Anda yakin ingin menghapus UKM <strong>"${ukm.nama}"</strong>?`,
+                [
+                    { text: 'Batal', class: 'modal-btn modal-btn-secondary', onClick: closeModal },
+                    { text: 'Hapus', class: 'modal-btn modal-btn-danger', onClick: () => {
+                        const index = ukmListData.findIndex(u => u.id === id);
+                        ukmListData.splice(index, 1);
+                        closeModal();
+                        showToast('UKM berhasil dihapus!', 'success');
+                        loadKelolaUKM();
+                        loadAdminKampusDashboard();
+                    }}
+                ]
+            );
+        }
+
+        function toggleStatusUKM(id) {
+            const ukm = ukmListData.find(u => u.id === id);
+            const newStatus = ukm.status === 'active' ? 'inactive' : 'active';
+            ukm.status = newStatus;
+            showToast(`UKM ${ukm.nama} berhasil di${newStatus === 'active' ? 'aktifkan' : 'non-aktifkan'}!`, 'success');
+            loadKelolaUKM();
+            loadAdminKampusDashboard();
+        }
+
+        // ==================== FUNGSI UMUM ====================
+
+        // Modal Functions
+        function showModal(title, body, actions = []) {
+            const modal = document.getElementById('modal');
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalBody').innerHTML = body;
+            
+            const actionsHtml = actions.map((action, i) => 
+                `<button class="${action.class}" id="modalBtn${i}">${action.text}</button>`
+            ).join('');
+            document.getElementById('modalActions').innerHTML = actionsHtml;
+            
+            // Attach event listeners
+            actions.forEach((action, i) => {
+                document.getElementById(`modalBtn${i}`).onclick = action.onClick;
+            });
+            
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Toast Notification
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.className = `toast ${type} active`;
+            
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 3000);
+        }
+
+        // Update active menu
+        function updateActiveMenu(index) {
+            const sidebar = document.querySelector('.sidebar-menu');
+            const menuItems = sidebar.querySelectorAll('.menu-item');
+            menuItems.forEach((item, i) => {
+                if (i === index) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+
+        // Fungsi notifikasi
+        function addNotification(message, type = 'info') {
+            const notification = {
+                id: notifications.length + 1,
+                message: message,
+                type: type,
+                timestamp: new Date().toLocaleString(),
+                read: false
+            };
+            notifications.push(notification);
+            updateNotificationCount();
+        }
+
+        function updateNotificationCount() {
+            const unread = notifications.filter(n => !n.read).length;
+            const countElement = document.getElementById('notificationCount');
+            if (countElement) {
+                countElement.textContent = unread;
+                countElement.style.display = unread > 0 ? 'flex' : 'none';
+            }
+        }
+
+        function showNotifications() {
+            const notificationList = document.getElementById('notificationList');
+            notificationList.innerHTML = notifications.map(notif => `
+                <div class="activity-item" style="margin-bottom: 10px; ${notif.read ? 'opacity: 0.7;' : ''}">
+                    <div class="activity-header">
+                        <div style="flex: 1;">
+                            <div class="activity-title">${notif.message}</div>
+                            <div class="activity-ukm">${notif.timestamp}</div>
+                        </div>
+                        <span class="badge ${notif.type === 'success' ? 'success' : notif.type === 'error' ? 'danger' : 'info'}">
+                            ${notif.type === 'success' ? 'Berhasil' : notif.type === 'error' ? 'Error' : 'Info'}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Tandai sebagai terbaca
+            notifications.forEach(notif => notif.read = true);
+            updateNotificationCount();
+            
+            document.getElementById('notificationModal').classList.add('active');
+        }
+
+        function closeNotificationModal() {
+            document.getElementById('notificationModal').classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            const notificationModal = document.getElementById('notificationModal');
+            
+            if (event.target === modal) {
+                closeModal();
+            }
+            if (event.target === notificationModal) {
+                closeNotificationModal();
+            }
+        };
+
+        // Initialize notification count
+        updateNotificationCount();
+    </script>
+</body>
+    <script>
+        // Lightweight frontend -> backend integration script
+        const API_BASE = 'http://localhost:8080/api';
+        async function apiFetch(method, path, body) {
+            try {
+                const res = await fetch(API_BASE + path, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: body ? JSON.stringify(body) : undefined
+                });
+                const text = await res.text();
+                try { return { ok: res.ok, status: res.status, data: text ? JSON.parse(text) : null }; } catch(e) { return { ok: res.ok, status: res.status, data: text }; }
+            } catch (e) {
+                return { ok: false, status: 0, error: e };
+            }
+        }
+
+        async function loadKegiatanFromApi() {
+            const res = await apiFetch('GET', '/kegiatan');
+            if (res.ok && Array.isArray(res.data)) {
+                window.kegiatanData = res.data;
+            }
+        }
+
+        async function loadUkmsFromApi() {
+            const res = await apiFetch('GET', '/ukm');
+            if (res.ok && Array.isArray(res.data)) {
+                window.ukmListData = res.data;
+            }
+        }
+
+        async function loadPendaftaranForCurrentUser() {
+            if (!window.currentUser || !window.currentUser.name) return;
+            const res = await apiFetch('GET', '/pendaftaran?mahasiswa=' + encodeURIComponent(window.currentUser.name));
+            if (res.ok && Array.isArray(res.data)) window.pendaftaranData = res.data;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // override login
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.onsubmit = async (e) => {
+                    e.preventDefault();
+                    const role = document.getElementById('roleSelect').value;
+                    const username = document.getElementById('username').value;
+                    const password = document.getElementById('password').value;
+                    const res = await apiFetch('POST', '/login', { username, password });
+                    if (res.ok && res.data) {
+                        window.currentUser = res.data;
+                        if (!window.currentUser.role) window.currentUser.role = role;
+                        showToast('Login berhasil! Selamat datang ' + window.currentUser.name, 'success');
+                        setTimeout(() => {
+                            document.getElementById('loginPage').style.display = 'none';
+                            document.getElementById('registerPage').style.display = 'none';
+                            if (window.currentUser.role === 'mahasiswa') {
+                                document.getElementById('dashboardMahasiswa').classList.add('active');
+                                document.getElementById('mahasiswaName').textContent = window.currentUser.name;
+                                showDashboardMahasiswa();
+                            } else if (window.currentUser.role === 'admin_ukm') {
+                                document.getElementById('dashboardAdminUKM').classList.add('active');
+                                showDashboardAdminUKM();
+                            } else {
+                                document.getElementById('dashboardAdminKampus').classList.add('active');
+                                showDashboardAdminKampus();
+                            }
+                        }, 300);
+                    } else {
+                        showToast('Username atau password salah!', 'error');
+                    }
+                };
+            }
+
+            // override register
+            const regForm = document.getElementById('registerForm');
+            if (regForm) {
+                regForm.onsubmit = async (e) => {
+                    e.preventDefault();
+                    const password = document.getElementById('regPassword').value;
+                    const confirmPassword = document.getElementById('regConfirmPassword').value;
+                    if (password !== confirmPassword) { showToast('Password tidak cocok!', 'error'); return; }
+                    const newUser = {
+                        name: document.getElementById('regNama').value,
+                        nim: document.getElementById('regNIM').value,
+                        prodi: document.getElementById('regProdi').value,
+                        email: document.getElementById('regEmail').value,
+                        username: document.getElementById('regUsername').value,
+                        password: password,
+                        role: 'mahasiswa'
+                    };
+                    const res = await apiFetch('POST', '/register', newUser);
+                    if (res.ok) {
+                        showToast('Registrasi berhasil! Silakan login.', 'success');
+                        setTimeout(() => showLoginPage(), 1200);
+                    } else {
+                        showToast('Registrasi gagal: ' + (res.data?.error || res.status), 'error');
+                    }
+                };
+            }
+
+            // override daftarKegiatan
+            window.daftarKegiatan = async function(id) {
+                const kegiatan = (window.kegiatanData || []).find(k => k.id === id) || { id };
+                // confirm using same modal flow
+                showModal('Konfirmasi Pendaftaran', `\n                    <div style="line-height: 1.8;">\n                        <p><strong>Kegiatan:</strong> ${kegiatan.nama || ''}</p>\n                        <p><strong>UKM:</strong> ${kegiatan.ukm || ''}</p>\n                        <p><strong>Tanggal:</strong> ${kegiatan.tanggal || ''}</p>\n                        <p><strong>Kuota:</strong> ${kegiatan.kuota || ''} peserta</p>\n                        <p><strong>Terdaftar:</strong> ${kegiatan.terdaftar || 0} peserta</p>\n                        <br>\n                        <p>Apakah Anda yakin ingin mendaftar kegiatan ini?</p>\n                    </div>\n                `, [
+                    { text: 'Batal', class: 'modal-btn modal-btn-secondary', onClick: closeModal },
+                    { text: 'Daftar', class: 'modal-btn modal-btn-primary', onClick: async () => {
+                        closeModal();
+                        if (!window.currentUser) { showToast('Silakan login terlebih dahulu', 'error'); return; }
+                        const payload = { kegiatanId: id, mahasiswa: window.currentUser.name, nim: window.currentUser.nim };
+                        const res = await apiFetch('POST', '/pendaftaran', payload);
+                        if (res.ok) {
+                            showToast('Pendaftaran berhasil! Menunggu persetujuan Admin UKM', 'success');
+                            addNotification(`Mahasiswa ${window.currentUser.name} mendaftar kegiatan "${kegiatan.nama || ''}"`, 'info');
+                            await loadKegiatanFromApi();
+                            await loadPendaftaranForCurrentUser();
+                        } else {
+                            showToast('Pendaftaran gagal: ' + (res.data?.error || res.status), 'error');
+                        }
+                    }}
+                ]);
+            };
+
+            // override approve/reject pendaftar to call API
+            window.approvePendaftar = async function(id) {
+                const res = await apiFetch('POST', `/pendaftaran/${id}/approve`);
+                if (res.ok) {
+                    showToast('Pendaftar berhasil disetujui!', 'success');
+                    addNotification('Pendaftar disetujui', 'success');
+                    await loadPendaftaranForCurrentUser();
+                    await loadKegiatanFromApi();
+                    loadPendaftarAdmin();
+                    loadAdminUKMDashboard();
+                } else {
+                    showToast('Gagal approve: ' + (res.data?.error || res.status), 'error');
+                }
+            };
+
+            window.rejectPendaftar = async function(id) {
+                const pendaftaran = (window.pendaftaranData || []).find(p => p.id === id) || {};
+                const kegiatan = (window.kegiatanData || []).find(k => k.id === pendaftaran.kegiatanId) || {};
+                showModal('Tolak Pendaftar', `\n                    <p>Tolak pendaftaran <strong>${pendaftaran.mahasiswa || ''}</strong> untuk kegiatan "${kegiatan.nama || ''}"?</p>\n                    <form class="modal-form" style="margin-top: 15px;">\n                        <div class="form-group">\n                            <label>Alasan Penolakan</label>\n                            <textarea id="alasanTolakPendaftar" placeholder="Masukkan alasan penolakan..." required></textarea>\n                        </div>\n                    </form>\n                `, [
+                    { text: 'Batal', class: 'modal-btn modal-btn-secondary', onClick: closeModal },
+                    { text: 'Tolak', class: 'modal-btn modal-btn-danger', onClick: async () => {
+                        const alasan = document.getElementById('alasanTolakPendaftar').value;
+                        if (!alasan.trim()) { showToast('Harap masukkan alasan penolakan!', 'error'); return; }
+                        const res = await apiFetch('POST', `/pendaftaran/${id}/reject`, { alasan });
+                        if (res.ok) {
+                            addNotification(`Pendaftaran ${pendaftaran.mahasiswa || ''} untuk "${kegiatan.nama || ''}" ditolak`, 'info');
+                            closeModal();
+                            showToast('Pendaftar berhasil ditolak!', 'info');
+                            await loadPendaftaranForCurrentUser();
+                            await loadKegiatanFromApi();
+                            loadPendaftarAdmin();
+                            loadAdminUKMDashboard();
+                        } else {
+                            showToast('Gagal menolak pendaftar: ' + (res.data?.error || res.status), 'error');
+                        }
+                    }}
+                ]);
+            };
+
+            // initial load to sync data with API if available
+            (async () => { await loadUkmsFromApi(); await loadKegiatanFromApi(); })();
+            
+            // API wrappers for CRUD operations on kegiatan & UKM
+            window.tambahKegiatan = function() { showModal('Tambah Kegiatan', '<form><div class="form-group"><label>Nama</label><input id="namaKegiatan" type="text" required></div><div class="form-group"><label>Tanggal</label><input id="tanggalKegiatan" type="date" required></div><div class="form-group"><label>Kuota</label><input id="kuotaKegiatan" type="number" required></div></form>', [{ text: 'Batal', class: 'modal-btn modal-btn-secondary', onClick: closeModal }, { text: 'Tambah', class: 'modal-btn modal-btn-primary', onClick: async () => { const res = await apiFetch('POST', '/kegiatan', { nama: document.getElementById('namaKegiatan').value, tanggal: document.getElementById('tanggalKegiatan').value, kuota: parseInt(document.getElementById('kuotaKegiatan').value), ukm: 'UKM IT', status: 'pending', deskripsi: '' }); if (res.ok) { closeModal(); showToast('Kegiatan ditambahkan!', 'success'); await loadKegiatanFromApi(); loadAdminUKMDashboard(); } else showToast('Gagal: ' + (res.data?.error || 'error'), 'error'); } }]); };
+            window.editKegiatan = function(id) { const k = (window.kegiatanData || []).find(x => x.id === id) || {}; showModal('Edit Kegiatan', '<input id="editNama" value="' + (k.nama || '') + '" required>', [{ text: 'Batal', class: 'modal-btn modal-btn-secondary', onClick: closeModal }, { text: 'Simpan', class: 'modal-btn modal-btn-primary', onClick: async () => { const res = await apiFetch('PUT', `/kegiatan/${id}`, { nama: document.getElementById('editNama').value }); if (res.ok) { closeModal(); showToast('Diupdate!', 'success'); await loadKegiatanFromApi(); loadAdminUKMDashboard(); } else showToast('Gagal', 'error'); } }]); };
+            window.hapusKegiatan = async function(id) { const res = await apiFetch('DELETE', `/kegiatan/${id}`); if (res.ok) { showToast('Dihapus!', 'success'); await loadKegiatanFromApi(); loadAdminUKMDashboard(); } else showToast('Gagal', 'error'); };
+            window.approveKegiatan = async function(id) { const res = await apiFetch('POST', `/kegiatan/${id}/approve`); if (res.ok) { showToast('Disetujui!', 'success'); await loadKegiatanFromApi(); loadAdminKampusDashboard(); loadApprovalKegiatan(); } else showToast('Gagal', 'error'); };
+            window.rejectKegiatan = async function(id) { const res = await apiFetch('POST', `/kegiatan/${id}/reject`, {}); if (res.ok) { showToast('Ditolak!', 'info'); await loadKegiatanFromApi(); loadAdminKampusDashboard(); loadApprovalKegiatan(); } else showToast('Gagal', 'error'); };
+            window.tambahUKM = function() { showModal('Tambah UKM', '<input id="namaUKMBaru" placeholder="Nama" required><input id="ketuaUKM" placeholder="Ketua" required>', [{ text: 'Batal', class: 'modal-btn modal-btn-secondary', onClick: closeModal }, { text: 'Tambah', class: 'modal-btn modal-btn-primary', onClick: async () => { const res = await apiFetch('POST', '/ukm', { nama: document.getElementById('namaUKMBaru').value, ketua: document.getElementById('ketuaUKM').value, deskripsi: '', status: 'active' }); if (res.ok) { closeModal(); showToast('UKM ditambahkan!', 'success'); await loadUkmsFromApi(); loadKelolaUKM(); } else showToast('Gagal', 'error'); } }]); };
+            window.editUKM = function(id) { const u = (window.ukmListData || []).find(x => x.id === id) || {}; showModal('Edit UKM', '<input id="editNamaUKM" value="' + (u.nama || '') + '" required>', [{ text: 'Batal', class: 'modal-btn modal-btn-secondary', onClick: closeModal }, { text: 'Simpan', class: 'modal-btn modal-btn-primary', onClick: async () => { const res = await apiFetch('PUT', `/ukm/${id}`, { nama: document.getElementById('editNamaUKM').value }); if (res.ok) { closeModal(); showToast('Diupdate!', 'success'); await loadUkmsFromApi(); loadKelolaUKM(); } else showToast('Gagal', 'error'); } }]); };
+            window.hapusUKM = async function(id) { const res = await apiFetch('DELETE', `/ukm/${id}`); if (res.ok) { showToast('Dihapus!', 'success'); await loadUkmsFromApi(); loadKelolaUKM(); } else showToast('Gagal', 'error'); };
+            window.toggleStatusUKM = async function(id) { const u = (window.ukmListData || []).find(x => x.id === id) || {}; const res = await apiFetch('PUT', `/ukm/${id}`, { status: u.status === 'active' ? 'inactive' : 'active' }); if (res.ok) { showToast('Status diubah!', 'success'); await loadUkmsFromApi(); loadKelolaUKM(); } else showToast('Gagal', 'error'); };
+        });
+    </script>
+</body>
+</html>

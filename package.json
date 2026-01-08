@@ -1,0 +1,18 @@
+{
+  "name": "projek-akhir-rpl-cms-mock-api",
+  "version": "1.0.0",
+  "description": "Mock REST API for Projek Akhir RPL CMS using json-server",
+  "private": true,
+  "scripts": {
+    "start:api": "json-server --watch db.json --port 8080 --routes routes.json",
+    "start:server": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "lowdb": "^6.0.1"
+  },
+  "devDependencies": {
+    "json-server": "^0.17.3"
+  }
+}

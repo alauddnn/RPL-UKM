@@ -1,0 +1,140 @@
+{
+  "kegiatan": [
+    {
+      "id": 1,
+      "nama": "Workshop Design Thinking",
+      "ukm": "UKM Kewirausahaan",
+      "tanggal": "2025-01-15",
+      "kuota": 30,
+      "terdaftar": 15,
+      "status": "approved"
+    },
+    {
+      "id": 2,
+      "nama": "Turnamen Futsal Antar Fakultas",
+      "ukm": "UKM Olahraga",
+      "tanggal": "2025-01-20",
+      "kuota": 100,
+      "terdaftar": 45,
+      "status": "approved"
+    },
+    {
+      "id": 3,
+      "nama": "Seminar Teknologi AI",
+      "ukm": "UKM IT",
+      "tanggal": "2025-01-18",
+      "kuota": 50,
+      "terdaftar": 38,
+      "status": "pending"
+    },
+    {
+      "id": 4,
+      "nama": "Kompetisi Coding Challenge",
+      "ukm": "UKM IT",
+      "tanggal": "2025-01-25",
+      "kuota": 40,
+      "terdaftar": 28,
+      "status": "approved"
+    }
+  ],
+  "ukm": [
+    {
+      "id": 1,
+      "nama": "UKM IT",
+      "deskripsi": "Komunitas teknologi dan programming",
+      "totalKegiatan": 8,
+      "ketua": "Ahmad Rizki",
+      "status": "active"
+    },
+    {
+      "id": 2,
+      "nama": "UKM Olahraga",
+      "deskripsi": "Komunitas olahraga dan kesehatan",
+      "totalKegiatan": 12,
+      "ketua": "Budi Santoso",
+      "status": "active"
+    },
+    {
+      "id": 3,
+      "nama": "UKM Seni",
+      "deskripsi": "Komunitas seni dan budaya",
+      "totalKegiatan": 10,
+      "ketua": "Citra Dewi",
+      "status": "active"
+    },
+    {
+      "id": 4,
+      "nama": "UKM Kewirausahaan",
+      "deskripsi": "Komunitas bisnis dan entrepreneurship",
+      "totalKegiatan": 6,
+      "ketua": "Dian Sari",
+      "status": "active"
+    }
+  ],
+  "pendaftaran": [
+    {
+      "id": 1,
+      "kegiatanId": 1,
+      "mahasiswa": "Budi Santoso",
+      "nim": "2021001",
+      "status": "approved",
+      "tanggalDaftar": "2024-12-01"
+    },
+    {
+      "id": 2,
+      "kegiatanId": 2,
+      "mahasiswa": "Ani Wulandari",
+      "nim": "2021002",
+      "status": "pending",
+      "tanggalDaftar": "2024-12-02"
+    },
+    {
+      "id": 3,
+      "kegiatanId": 3,
+      "mahasiswa": "Citra Dewi",
+      "nim": "2021003",
+      "status": "approved",
+      "tanggalDaftar": "2024-12-03"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "username": "mahasiswa",
+      "password": "mhs123",
+      "name": "Budi Santoso",
+      "nim": "2021001",
+      "role": "mahasiswa"
+    },
+    {
+      "id": 2,
+      "username": "adminukm",
+      "password": "ukm123",
+      "name": "Admin UKM IT",
+      "role": "admin_ukm"
+    },
+    {
+      "id": 3,
+      "username": "adminkampus",
+      "password": "kampus123",
+      "name": "Admin Kampus",
+      "role": "admin_kampus"
+    },
+    {
+      "id": 4,
+      "username": "wahid",
+      "password": "pas123",
+      "name": "Wahid",
+      "nim": "2012313",
+      "role": "mahasiswa"
+    },
+    {
+      "id": 5,
+      "username": "baeti",
+      "password": "123",
+      "name": "baeti",
+      "nim": "21231231",
+      "role": "mahasiswa"
+    }
+  ]
+}

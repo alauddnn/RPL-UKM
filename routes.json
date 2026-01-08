@@ -1,0 +1,8 @@
+{
+  "/api/kegiatan": "/kegiatan",
+  "/api/ukm": "/ukm",
+  "/api/pendaftaran": "/pendaftaran",
+  "/api/users": "/users",
+  "/api/login": "/users",
+  "/api/register": "/users"
+}
